@@ -1,35 +1,4 @@
-# Old Photo Restoration (Official PyTorch Implementation)
-
-<img src='imgs/0001.jpg'/>
-
-### [Project Page](http://raywzy.com/Old_Photo/) | [Paper (CVPR version)](https://arxiv.org/abs/2004.09484) | [Paper (Journal version)](https://arxiv.org/pdf/2009.07047v1.pdf) | [Pretrained Model](https://hkustconnect-my.sharepoint.com/:f:/g/personal/bzhangai_connect_ust_hk/Em0KnYOeSSxFtp4g_dhWdf0BdeT3tY12jIYJ6qvSf300cA?e=nXkJH2) | [Colab Demo](https://colab.research.google.com/drive/1NEm6AsybIiC5TwTU_4DqDkQO0nFRB-uA?usp=sharing)  | [Replicate Demo & Docker Image](https://replicate.ai/zhangmozhe/bringing-old-photos-back-to-life) :fire:
-
-**Bringing Old Photos Back to Life, CVPR2020 (Oral)**
-
-**Old Photo Restoration via Deep Latent Space Translation, TPAMI 2022**
-
-[Ziyu Wan](http://raywzy.com/)<sup>1</sup>,
-[Bo Zhang](https://www.microsoft.com/en-us/research/people/zhanbo/)<sup>2</sup>,
-[Dongdong Chen](http://www.dongdongchen.bid/)<sup>3</sup>,
-[Pan Zhang](https://panzhang0212.github.io/)<sup>4</sup>,
-[Dong Chen](https://www.microsoft.com/en-us/research/people/doch/)<sup>2</sup>,
-[Jing Liao](https://liaojing.github.io/html/)<sup>1</sup>,
-[Fang Wen](https://www.microsoft.com/en-us/research/people/fangwen/)<sup>2</sup> <br>
-<sup>1</sup>City University of Hong Kong, <sup>2</sup>Microsoft Research Asia, <sup>3</sup>Microsoft Cloud AI, <sup>4</sup>USTC
-
-<!-- ## Notes of this project
-The code originates from our research project and the aim is to demonstrate the research idea, so we have not optimized it from a product perspective. And we will spend time to address some common issues, such as out of memory issue, limited resolution, but will not involve too much in engineering problems, such as speedup of the inference, fastapi deployment and so on. **We welcome volunteers to contribute to this project to make it more usable for practical application.** -->
-
-## :sparkles: News
-**2022.3.31**: Our new work regarding old film restoration will be published in CVPR 2022. For more details, please refer to the [project website](http://raywzy.com/Old_Film/) and [github repo](https://github.com/raywzy/Bringing-Old-Films-Back-to-Life).
-
-The framework now supports the restoration of high-resolution input.
-
-<img src='imgs/HR_result.png'>
-
-Training code is available and welcome to have a try and learn the training details. 
-
-You can now play with our [Colab](https://colab.research.google.com/drive/1NEm6AsybIiC5TwTU_4DqDkQO0nFRB-uA?usp=sharing) and try it on your photos. 
+# DEGRADED IMAGES RESTORATION ...
 
 ## Requirement
 The code is tested on Ubuntu with Nvidia GPUs and CUDA installed. Python>=3.6 is required to run the code.
@@ -41,15 +10,15 @@ Clone the Synchronized-BatchNorm-PyTorch repository for
 ```
 cd Face_Enhancement/models/networks/
 git clone https://github.com/vacancy/Synchronized-BatchNorm-PyTorch
-cp -rf Synchronized-BatchNorm-PyTorch/sync_batchnorm .
+xcopy Synchronized-BatchNorm-PyTorch\sync_batchnorm .\sync_batchnorm /E /I /Y
 cd ../../../
 ```
 
 ```
 cd Global/detection_models
 git clone https://github.com/vacancy/Synchronized-BatchNorm-PyTorch
-cp -rf Synchronized-BatchNorm-PyTorch/sync_batchnorm .
-cd ../../
+xcopy Synchronized-BatchNorm-PyTorch\sync_batchnorm .\sync_batchnorm /E /I /Y
+cd ../../../
 ```
 
 Download the landmark detection pretrained model
@@ -128,7 +97,6 @@ python detection.py --test_path [test_image_folder_path] \
                     --input_size [resize_256|full_size|scale_256]
 ```
 
-<img src='imgs/scratch_detection.png'>
 
 ### 3) Global Restoration
 
@@ -150,19 +118,13 @@ python test.py --Quality_restore \
                --outputs_dir [output_path]
 ```
 
-<img src='imgs/global.png'>
+
 
 
 ### 4) Face Enhancement
 
 We use a progressive generator to refine the face regions of old photos. More details could be found in our journal submission and `./Face_Enhancement` folder.
 
-<p align="center">
-<img src='imgs/face_pipeline.jpg' width="60%" height="60%"/>
-</p>
-
-
-<img src='imgs/face.png'>
 
 > *NOTE*: 
 > This repo is mainly for research purpose and we have not yet optimized the running performance. 
@@ -181,7 +143,7 @@ A user-friendly GUI which takes input of image by user and shows result in respe
 4. Wait for a while and see results on GUI window.
 5. Exit window by clicking Exit Window and get your result image in output folder.
 
-<img src='imgs/gui.PNG'>
+
 
 ## How to train?
 
@@ -221,39 +183,3 @@ Traing the mapping with scraches (Multi-Scale Patch Attention for HR input):
 ```
 python train_mapping.py --no_TTUR --NL_res --random_hole --use_SN --correlation_renormalize --training_dataset mapping --NL_use_mask --NL_fusion_method combine --non_local Setting_42 --use_v2_degradation --use_vae_which_epoch 200 --continue_train --name mapping_Patch_Attention --label_nc 0 --loadSize 256 --fineSize 256 --dataroot [your_data_folder] --no_instance --resize_or_crop crop_only --batchSize 36 --no_html --gpu_ids 0,1,2,3 --nThreads 8 --load_pretrainA [ckpt_of_domainA_SR_old_photos] --load_pretrainB [ckpt_of_domainB_old_photos] --l2_feat 60 --n_downsample_global 3 --mc 64 --k_size 4 --start_r 1 --mapping_n_block 6 --map_mc 512 --use_l1_feat --niter 150 --niter_decay 100 --outputs_dir [your_output_folder] --checkpoints_dir [your_ckpt_folder] --irregular_mask [absolute_path_of_mask_file] --mapping_exp 1
 ```
-
-
-## Citation
-
-If you find our work useful for your research, please consider citing the following papers :)
-
-```bibtex
-@inproceedings{wan2020bringing,
-title={Bringing Old Photos Back to Life},
-author={Wan, Ziyu and Zhang, Bo and Chen, Dongdong and Zhang, Pan and Chen, Dong and Liao, Jing and Wen, Fang},
-booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
-pages={2747--2757},
-year={2020}
-}
-```
-
-```bibtex
-@article{wan2020old,
-  title={Old Photo Restoration via Deep Latent Space Translation},
-  author={Wan, Ziyu and Zhang, Bo and Chen, Dongdong and Zhang, Pan and Chen, Dong and Liao, Jing and Wen, Fang},
-  journal={arXiv preprint arXiv:2009.07047},
-  year={2020}
-}
-```
-
-If you are also interested in the legacy photo/video colorization, please refer to [this work](https://github.com/zhangmozhe/video-colorization).
-
-## Maintenance
-
-This project is currently maintained by Ziyu Wan and is for academic research use only. If you have any questions, feel free to contact raywzy@gmail.com.
-
-## License
-
-The codes and the pretrained model in this repository are under the MIT license as specified by the LICENSE file. We use our labeled dataset to train the scratch detection model.
-
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
